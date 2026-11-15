@@ -1,0 +1,5 @@
+services:
+  optical-lab:
+    build: .
+    ports:
+      - "18110:80"
