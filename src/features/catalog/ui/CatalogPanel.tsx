@@ -6,7 +6,7 @@ export function CatalogPanel({ onAdd }: { onAdd: (kind: Kind) => void }) {
   return (
     <section className="catalog">
       <div className="section-title">
-        光学器件 <span>05</span>
+        光学器件 <span>{String(catalog.length).padStart(2, "0")}</span>
       </div>
       <p className="muted">点击添加到实验台</p>
       {catalog.map((c) => (

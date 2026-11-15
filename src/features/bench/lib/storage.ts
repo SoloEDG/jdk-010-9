@@ -1,15 +1,32 @@
 import type { LabDocument } from "../../../shared/document";
+import { normalizeDocument } from "../../../shared/document";
+
+const KEY = "lumen-document-v2";
+const LEGACY_KEY = "lumen-document";
+
 export function saveDocument(doc: LabDocument) {
-  localStorage.setItem("lumen-document", JSON.stringify(doc));
+  localStorage.setItem(KEY, JSON.stringify(doc));
 }
+
+/** Restore a saved scene, migrating documents written before timing existed. */
 export function loadDocument(): LabDocument | null {
   try {
-    const v = JSON.parse(localStorage.getItem("lumen-document") ?? "null");
+    const raw =
+      localStorage.getItem(KEY) ?? localStorage.getItem(LEGACY_KEY) ?? "null";
+    const v = JSON.parse(raw);
     if (v?.version !== 1 || !Array.isArray(v.items) || v.items.length > 80)
       return null;
     for (const e of v.items) {
       if (
-        !["source", "mirror", "lens", "prism", "screen"].includes(e.kind) ||
+        ![
+          "source",
+          "pulse",
+          "mirror",
+          "lens",
+          "prism",
+          "glass",
+          "screen",
+        ].includes(e.kind) ||
         typeof e.id !== "string"
       )
         return null;
@@ -35,7 +52,9 @@ export function loadDocument(): LabDocument | null {
       )
         return null;
     }
-    return v;
+    // Timing fields and analysis settings are defaulted, not rejected, so a
+    // scene saved before this feature existed still opens.
+    return normalizeDocument(v as LabDocument);
   } catch {
     return null;
   }

@@ -25,7 +25,11 @@ export function ObjectList({
             {labels[e.kind]} {String(i + 1).padStart(2, "0")}
           </span>
           <small>
-            {Math.round(e.x)}, {Math.round(e.y)}
+            {e.kind === "pulse"
+              ? `${Math.round(e.pulseWidth)}ps·T${Math.round(e.period)}`
+              : e.kind === "screen"
+                ? `门 ${Math.round(e.gateWidth)}ps`
+                : `${Math.round(e.x)}, ${Math.round(e.y)}`}
           </small>
         </button>
       ))}

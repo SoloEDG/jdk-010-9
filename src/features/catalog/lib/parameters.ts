@@ -1,4 +1,6 @@
 import type { Element } from "../../../shared/document";
+import { defaultTiming, isEmitter, isGlass } from "../../../shared/document";
+
 export interface Parameter {
   key: keyof Element;
   label: string;
@@ -7,6 +9,7 @@ export interface Parameter {
   step: number;
   unit: string;
 }
+
 export function parameters(e: Element): Parameter[] {
   const common: Parameter[] = [
     {
@@ -19,14 +22,14 @@ export function parameters(e: Element): Parameter[] {
     },
     {
       key: "size",
-      label: e.kind === "source" ? "光束宽度" : "器件口径",
+      label: isEmitter(e.kind) ? "光束宽度" : isGlass(e.kind) ? "器件宽度" : "器件口径",
       min: 10,
       max: 300,
       step: 1,
       unit: "mm",
     },
   ];
-  if (e.kind === "source")
+  if (isEmitter(e.kind))
     common.push(
       {
         key: "wavelength",
@@ -40,11 +43,49 @@ export function parameters(e: Element): Parameter[] {
       { key: "spread", label: "发散角", min: 0, max: 60, step: 1, unit: "°" },
       {
         key: "power",
-        label: "光源功率",
+        label: e.kind === "pulse" ? "脉冲峰值功率" : "光源功率",
         min: 0.1,
         max: 3,
         step: 0.1,
         unit: "W",
+      },
+    );
+  if (e.kind === "pulse")
+    common.push(
+      {
+        key: "pulseWidth",
+        label: "脉宽 FWHM",
+        min: 10,
+        max: 2000,
+        step: 10,
+        unit: "ps",
+      },
+      {
+        key: "period",
+        label: "重复周期",
+        min: 50,
+        max: 5000,
+        step: 10,
+        unit: "ps",
+      },
+    );
+  if (e.kind === "screen")
+    common.push(
+      {
+        key: "gateStart",
+        label: "采集起点",
+        min: -5000,
+        max: 5000,
+        step: 50,
+        unit: "ps",
+      },
+      {
+        key: "gateWidth",
+        label: "采集窗口",
+        min: 100,
+        max: 20000,
+        step: 100,
+        unit: "ps",
       },
     );
   if (e.kind === "lens")
@@ -56,7 +97,7 @@ export function parameters(e: Element): Parameter[] {
       step: 10,
       unit: "mm",
     });
-  if (e.kind === "prism")
+  if (isGlass(e.kind))
     common.push({
       key: "index",
       label: "折射率 nD",
@@ -65,5 +106,16 @@ export function parameters(e: Element): Parameter[] {
       step: 0.01,
       unit: "",
     });
+  if (e.kind === "glass")
+    common.push({
+      key: "thickness",
+      label: "玻璃厚度",
+      min: 5,
+      max: 200,
+      step: 5,
+      unit: "mm",
+    });
   return common;
 }
+
+export const timingDefaults = defaultTiming;

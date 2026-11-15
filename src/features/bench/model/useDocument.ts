@@ -1,27 +1,43 @@
-import { useState } from "react";
-import type { LabDocument, Element } from "../../../shared/document";
+import { useCallback, useState } from "react";
+import type { Element, LabDocument } from "../../../shared/document";
+import { normalizeDocument } from "../../../shared/document";
 import { patchDocument } from "../../../shared/commands";
 import { loadDocument, saveDocument } from "../lib/storage";
+import {
+  pushHistory,
+  redoState,
+  undoState,
+  type HistoryState,
+} from "../lib/history";
+
 export function useDocument(initial: LabDocument) {
-  const [doc, setDoc] = useState(() => loadDocument() ?? initial);
+  const [state, setState] = useState<HistoryState>(() => {
+    const restored = loadDocument();
+    return { doc: restored ?? normalizeDocument(initial), past: [], future: [] };
+  });
   const [selected, setSelected] = useState<string | null>(null);
-  const [past, setPast] = useState<LabDocument[]>([]);
-  const [future, setFuture] = useState<LabDocument[]>([]);
   const [saved, setSaved] = useState(false);
-  function replace(next: LabDocument) {
-    setPast((p) => [...p.slice(-49), doc]);
-    setFuture([]);
-    setDoc(next);
+  const { doc } = state;
+
+  const replace = useCallback((next: LabDocument) => {
+    setState((s) => pushHistory(s, normalizeDocument(next)));
     setSaved(false);
-  }
+  }, []);
+
+  const update = useCallback((id: string, patch: Partial<Element>) => {
+    setState((s) =>
+      pushHistory(s, normalizeDocument(patchDocument(s.doc, id, patch))),
+    );
+    setSaved(false);
+  }, []);
+
   return {
     doc,
     selected,
     setSelected,
     saved,
     replace,
-    update: (id: string, p: Partial<Element>) =>
-      replace(patchDocument(doc, id, p)),
+    update,
     remove: (id: string) => {
       replace({ ...doc, items: doc.items.filter((e) => e.id !== id) });
       setSelected(null);
@@ -31,23 +47,14 @@ export function useDocument(initial: LabDocument) {
       setSaved(true);
     },
     undo: () => {
-      const prev = past.at(-1);
-      if (prev) {
-        setFuture((f) => [doc, ...f]);
-        setDoc(prev);
-        setPast((p) => p.slice(0, -1));
-        setSaved(false);
-      }
+      setState(undoState);
+      setSaved(false);
     },
     redo: () => {
-      if (future[0]) {
-        setPast((p) => [...p, doc]);
-        setDoc(future[0]);
-        setFuture((f) => f.slice(1));
-        setSaved(false);
-      }
+      setState(redoState);
+      setSaved(false);
     },
-    canUndo: past.length > 0,
-    canRedo: future.length > 0,
+    canUndo: state.past.length > 0,
+    canRedo: state.future.length > 0,
   };
 }

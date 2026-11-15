@@ -1,18 +1,20 @@
 import { useState } from "react";
 import type { LabDocument, TraceResult } from "../../../shared/document";
-import { missions } from "./presets";
+import { missions, type Mission } from "./presets";
 import { evaluateMission } from "../lib/evaluate";
+
 export function useMission(doc: LabDocument, result: TraceResult) {
   const [id, setId] = useState("focus");
   const mission = missions.find((m) => m.id === id)!;
-  const evaluation = evaluateMission(id, doc, result);
+  const evaluation = evaluateMission(mission, doc, result);
   return {
     mission,
     evaluation,
     missions,
-    choose: (next: string) => {
+    choose: (next: string): LabDocument => {
       setId(next);
-      return structuredClone(missions.find((m) => m.id === next)!.doc);
+      const found: Mission | undefined = missions.find((m) => m.id === next);
+      return structuredClone(found?.doc ?? missions[0].doc);
     },
   };
 }

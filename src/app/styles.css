@@ -885,3 +885,259 @@ footer button {
     top: 10px;
   }
 }
+
+/* ---------- timing / gated detector ---------- */
+.device-icon.pulse {
+  color: #b9dcf7;
+  background: #21303c;
+  border-color: #39505f;
+}
+.device-icon.glass {
+  color: #a9cdf0;
+  background: #1c2a34;
+  border-color: #39505f;
+}
+.optics-controls {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.playhead {
+  width: 96px;
+  height: 3px;
+  accent-color: #8fc7f5;
+  margin: 0 2px;
+}
+.playhead-readout {
+  font-size: 9px;
+  color: #8fa6b7;
+  font-variant-numeric: tabular-nums;
+  min-width: 46px;
+}
+.detector-heading {
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.gate-fields {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #8193a1;
+}
+.gate-fields label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #34414c;
+  border-radius: 4px;
+  padding: 2px 5px;
+  background: #1c2630;
+}
+.gate-fields input {
+  width: 54px;
+  border: 0;
+  background: transparent;
+  color: #cfdae2;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+.gate-fields input::-webkit-inner-spin-button,
+.gate-fields input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.gate-fields .unit {
+  color: #5f7382;
+}
+.chart-legend {
+  display: flex;
+  gap: 10px;
+  font-size: 9px;
+  flex-wrap: wrap;
+}
+.chart-legend i {
+  font-style: normal;
+}
+.chart-tools {
+  display: flex;
+  gap: 5px;
+}
+.joint-wrap {
+  position: relative;
+  margin-top: 7px;
+}
+.joint-chart {
+  display: block;
+  width: 100%;
+  height: 168px;
+  background: #10161c;
+  border: 1px solid #232e37;
+  border-radius: 4px;
+}
+.time-chart {
+  display: block;
+  width: 100%;
+  height: 60px;
+  margin-top: 5px;
+}
+.axis-label {
+  position: absolute;
+  font-size: 8px;
+  color: #5f7382;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+.axis-label.y {
+  left: -2px;
+  top: 4px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.axis-label.x {
+  right: 2px;
+  bottom: 0;
+}
+.error-bound {
+  margin: 8px 0 0;
+  font-size: 9px;
+  line-height: 1.7;
+  color: #6e818f;
+  border-left: 2px solid #38513a;
+  padding-left: 8px;
+}
+.error-bound.warn {
+  color: #d8ae7a;
+  border-left-color: #8a6431;
+}
+.measurements .sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 8px;
+  color: #637683;
+  line-height: 1.6;
+}
+.detector-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 11px;
+}
+.badge {
+  font-size: 9px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #34414c;
+  color: #93a6b4;
+  line-height: 1.4;
+}
+.badge.ok {
+  border-color: #3c5537;
+  color: #a9cf8b;
+  background: #1c2619;
+}
+.badge.bad {
+  border-color: #6a4a36;
+  color: #e0b083;
+  background: #2a2017;
+}
+.badge.neutral {
+  color: #8a9dab;
+}
+.measurements {
+  gap: 10px;
+}
+.detector {
+  min-height: 300px;
+}
+.detector-body {
+  grid-template-columns: 1fr 158px;
+  gap: 18px;
+}
+.time-ruler {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 34px;
+  height: 2px;
+  background: #26323c;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  color: #4f6577;
+  gap: 6px;
+}
+.time-ruler i {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 10px;
+  background: #b5eb78;
+  box-shadow: 0 0 6px #b5eb7899;
+}
+@media (max-width: 700px) {
+  .detector-body {
+    grid-template-columns: 1fr;
+  }
+  .measurements {
+    border-left: 0;
+    border-top: 1px solid #2b353e;
+    padding: 12px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .joint-chart {
+    height: 130px;
+  }
+  .playhead {
+    width: 60px;
+  }
+}
+.mission-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0 0;
+}
+.mission-metrics div {
+  border: 1px solid #2f3a44;
+  border-radius: 5px;
+  padding: 7px 8px;
+  background: #16202a;
+}
+.mission-metrics dt {
+  font-size: 9px;
+  color: #7e909e;
+}
+.mission-metrics dd {
+  margin: 3px 0 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: #d6e2ea;
+}
+.mission-metrics em {
+  font-style: normal;
+  font-size: 9px;
+  color: #6b7e8d;
+}
+.mission-panel > small.uncertain {
+  color: #dda67c;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.time-ruler > span {
+  position: absolute;
+  top: -16px;
+  font-size: 8px;
+  color: #5c7183;
+  font-variant-numeric: tabular-nums;
+}
+.time-ruler .ruler-start {
+  left: 14px;
+}
+.time-ruler .ruler-end {
+  right: 2px;
+}

@@ -1,3 +1,4 @@
 export { useOptics } from "./model/useOptics";
-export { RayLayer } from "./ui/RayLayer";
+export { usePlayhead } from "./model/usePlayhead";
+export { RayLayer, lifeFraction } from "./ui/RayLayer";
 export { OpticsControls } from "./ui/OpticsControls";
